@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCustomerSession } from "@/lib/customer-auth";
-import { Menu, Search, Ticket, X, Music2, ChevronRight } from "lucide-react";
+import { Menu, Search, Ticket, X, Music2, ChevronRight, ArrowRight } from "lucide-react";
+import { getSiteUrl } from "@/lib/site-utils";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { LanguageSwitcher } from "@/lib/i18n/language-switcher";
 
@@ -77,7 +78,7 @@ export default async function SubdomainLayout(props: {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 shrink-0">
+            <Link href={getSiteUrl(subdomain, "/")} className="flex items-center gap-2.5 shrink-0">
               {organizer.logo ? (
                 <img src={organizer.logo} alt={organizer.name} className="h-8 w-8 rounded-lg object-cover" />
               ) : (
@@ -93,7 +94,7 @@ export default async function SubdomainLayout(props: {
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-6">
               {nav.map(n => (
-                <Link key={n.href} href={n.href}
+                <Link key={n.href} href={getSiteUrl(subdomain, n.href)}
                   className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
                   {n.label}
                 </Link>
@@ -104,11 +105,11 @@ export default async function SubdomainLayout(props: {
             <div className="flex items-center gap-2">
               <LanguageSwitcher currentLang={lang as "en" | "id"} />
               
-              <Link href="/search"
+              <Link href={getSiteUrl(subdomain, "/search")}
                 className="h-9 w-9 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
                 <Search className="h-4.5 w-4.5" />
               </Link>
-              <Link href="/my-tickets"
+              <Link href={getSiteUrl(subdomain, "/my-tickets")}
                 className="hidden sm:flex items-center gap-1.5 text-sm font-bold px-3.5 py-2 rounded-full border-2 site-border-primary site-primary hover:site-bg-primary hover:text-white transition-all">
                 <Ticket className="h-3.5 w-3.5" />
                 {dict.myTickets}
@@ -120,7 +121,7 @@ export default async function SubdomainLayout(props: {
                   {dict.logout}
                 </button>
               ) : (
-                <Link href="/my-tickets"
+                <Link href={getSiteUrl(subdomain, "/my-tickets")}
                   className="hidden md:block text-sm font-bold text-slate-600 hover:text-slate-900 ml-1">
                   {dict.login}
                 </Link>
@@ -144,16 +145,15 @@ export default async function SubdomainLayout(props: {
                 <X className="h-5 w-5 text-slate-500" />
               </label>
             </div>
-            <nav className="flex flex-col gap-1">
+            <nav className="flex flex-col gap-4 mb-8">
               {nav.map(n => (
-                <Link key={n.href} href={n.href}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                  {n.label} <ChevronRight className="h-4 w-4 text-slate-400" />
+                <Link key={n.href} href={getSiteUrl(subdomain, n.href)} className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                  {n.label} <ArrowRight className="h-5 w-5 text-slate-400" />
                 </Link>
               ))}
-              <Link href="/my-tickets"
-                className="flex items-center gap-2 mt-2 px-3 py-2.5 rounded-lg text-sm font-bold site-primary bg-primary/5">
-                <Ticket className="h-4 w-4" /> {dict.myTickets}
+              <div className="h-px w-full bg-slate-100 my-2"></div>
+              <Link href={getSiteUrl(subdomain, "/my-tickets")} className="text-lg font-bold site-primary flex items-center gap-2">
+                <Ticket className="h-5 w-5" /> {dict.myTickets}
               </Link>
             </nav>
           </div>
@@ -217,16 +217,16 @@ export default async function SubdomainLayout(props: {
             <div>
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Navigasi</h4>
               <ul className="space-y-2.5 text-sm text-slate-400">
-                {nav.map(n => <li key={n.href}><Link href={n.href} className="hover:text-white transition-colors">{n.label}</Link></li>)}
-                <li><Link href="/search" className="hover:text-white transition-colors">Cari Event</Link></li>
+                {nav.map(n => <li key={n.href}><Link href={getSiteUrl(subdomain, n.href)} className="hover:text-white transition-colors">{n.label}</Link></li>)}
+                <li><Link href={getSiteUrl(subdomain, "/search")} className="hover:text-white transition-colors">Cari Event</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Tiket</h4>
               <ul className="space-y-2.5 text-sm text-slate-400">
-                <li><Link href="/my-tickets" className="hover:text-white transition-colors">Tiket Saya</Link></li>
-                <li><Link href="/my-tickets" className="hover:text-white transition-colors">Riwayat Pesanan</Link></li>
+                <li><Link href={getSiteUrl(subdomain, "/my-tickets")} className="hover:text-white transition-colors">Tiket Saya</Link></li>
+                <li><Link href={getSiteUrl(subdomain, "/my-tickets")} className="hover:text-white transition-colors">Riwayat Pesanan</Link></li>
               </ul>
             </div>
 

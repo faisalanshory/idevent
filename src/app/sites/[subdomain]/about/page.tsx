@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getSiteUrl } from "@/lib/site-utils";
 import EventCard from "@/components/sites/event-card";
 import { Mail, Phone, MapPin, Music2, ArrowRight } from "lucide-react";
 
@@ -125,7 +126,7 @@ export default async function AboutPage({ params }: Props) {
                 <p className="text-xs font-bold uppercase tracking-widest site-primary mb-1">Segera Hadir</p>
                 <h2 className="text-2xl font-black text-slate-900">Event Mendatang</h2>
               </div>
-              <Link href="/events" className="text-sm font-bold site-primary flex items-center gap-1 hover:gap-2 transition-all">
+              <Link href={getSiteUrl(subdomain, "/events")} className="text-sm font-bold site-primary flex items-center gap-1 hover:gap-2 transition-all">
                 Lihat Semua <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

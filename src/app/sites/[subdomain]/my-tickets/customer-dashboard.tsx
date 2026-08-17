@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getSiteUrl } from "@/lib/site-utils";
 import { Ticket, Calendar, MapPin, ChevronRight, LogOut, Settings, User, Save, Loader2, CheckCircle2 } from "lucide-react";
 
 function formatDate(s: string) {
   return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(new Date(s));
 }
 
-export default function CustomerDashboard({ customer, tickets }: { customer: any; tickets: any[] }) {
+export default function CustomerDashboard({ customer, tickets, subdomain }: { customer: any; tickets: any[]; subdomain: string }) {
   const [activeTab, setActiveTab] = useState<"upcoming" | "past" | "settings">("upcoming");
   
   // Settings state
@@ -151,7 +152,7 @@ export default function CustomerDashboard({ customer, tickets }: { customer: any
           <p className="text-sm text-slate-500 mt-1">
             {activeTab === "upcoming" ? "Kamu belum memiliki tiket untuk event mendatang." : "Belum ada riwayat event."}
           </p>
-          <Link href="/events" className="inline-flex items-center gap-1.5 mt-5 px-6 py-2.5 rounded-full text-sm font-bold site-primary site-border-primary border-2 hover:site-bg-primary hover:text-white transition">
+          <Link href={getSiteUrl(subdomain, "/events")} className="inline-flex items-center gap-1.5 mt-5 px-6 py-2.5 rounded-full text-sm font-bold site-primary site-border-primary border-2 hover:site-bg-primary hover:text-white transition">
             Cari Event Sekarang <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
@@ -171,7 +172,7 @@ export default function CustomerDashboard({ customer, tickets }: { customer: any
                     <span className="text-sm font-bold text-slate-600">{t.quantity} Tiket</span>
                   </div>
                 </div>
-                <Link href={`/ticket/${t.orderId}`}
+                <Link href={getSiteUrl(subdomain, `/ticket/${t.orderId}`)}
                   className="flex flex-col items-center justify-center h-12 w-12 rounded-full site-bg-primary text-white hover:scale-105 transition-transform shrink-0 shadow-sm"
                   title="Lihat Tiket">
                   <Ticket className="h-5 w-5" />

@@ -8,6 +8,7 @@ import {
   Music2, ChevronRight,
 } from "lucide-react";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { getSiteUrl } from "@/lib/site-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +65,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
           subtitle: organizer.siteSetting?.description || "Selamat datang di situs tiket resmi kami. Temukan event menarik di sini.",
           imageUrl: organizer.logo || "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=80",
           ctaLabel: dict.viewAll,
-          ctaUrl: "/events",
+          ctaUrl: getSiteUrl(subdomain, "/events"),
           isActive: true,
           sortOrder: 0
         }] as any} />
@@ -78,7 +79,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
               <p className="text-xs font-bold uppercase tracking-widest site-primary mb-1">Pilihan Redaksi</p>
               <h2 className="text-2xl md:text-3xl font-black text-slate-900">Event Pilihan</h2>
             </div>
-            <Link href="/events" className="hidden sm:flex items-center gap-1 text-sm font-bold site-primary hover:gap-2 transition-all">
+            <Link href={getSiteUrl(subdomain, "/events")} className="hidden sm:flex items-center gap-1 text-sm font-bold site-primary hover:gap-2 transition-all">
               {dict.viewAll} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -88,7 +89,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
             ))}
           </div>
           <div className="mt-6 flex sm:hidden justify-center">
-            <Link href="/events" className="text-sm font-bold site-primary flex items-center gap-1">
+            <Link href={getSiteUrl(subdomain, "/events")} className="text-sm font-bold site-primary flex items-center gap-1">
               {dict.viewAll} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -104,7 +105,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
                 <p className="text-xs font-bold uppercase tracking-widest site-primary mb-1">Jangan Sampai Ketinggalan</p>
                 <h2 className="text-2xl md:text-3xl font-black text-slate-900">{dict.upcomingEvents}</h2>
               </div>
-              <Link href="/events" className="hidden sm:flex items-center gap-1 text-sm font-bold site-primary hover:gap-2 transition-all">
+              <Link href={getSiteUrl(subdomain, "/events")} className="hidden sm:flex items-center gap-1 text-sm font-bold site-primary hover:gap-2 transition-all">
                 {dict.viewAll} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -156,7 +157,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
                       </div>
                     )}
                   </div>
-                  <Link href="/events"
+                  <Link href={getSiteUrl(subdomain, "/events")}
                     className="mt-2 inline-flex items-center gap-1.5 bg-white text-primary font-black text-sm px-5 py-2 rounded-full hover:gap-2.5 transition-all shadow-md">
                     Beli Sekarang <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -176,13 +177,13 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
                 <p className="text-xs font-bold uppercase tracking-widest site-primary mb-1">Informasi & Inspirasi</p>
                 <h2 className="text-2xl md:text-3xl font-black text-slate-900">{dict.latestArticles}</h2>
               </div>
-              <Link href="/articles" className="hidden sm:flex items-center gap-1 text-sm font-bold site-primary hover:gap-2 transition-all">
+              <Link href={getSiteUrl(subdomain, "/articles")} className="hidden sm:flex items-center gap-1 text-sm font-bold site-primary hover:gap-2 transition-all">
                 {dict.viewAll} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {organizer.articles.map(article => (
-                <Link key={article.id} href={`/articles/${article.slug}`}>
+                <Link key={article.id} href={getSiteUrl(subdomain, `/articles/${article.slug}`)}>
                   <div className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
                     <div className="relative h-44 overflow-hidden bg-slate-100">
                       {article.coverImage ? (
@@ -216,7 +217,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
               ))}
             </div>
             <div className="mt-6 flex sm:hidden justify-center">
-              <Link href="/articles" className="text-sm font-bold site-primary flex items-center gap-1">
+              <Link href={getSiteUrl(subdomain, "/articles")} className="text-sm font-bold site-primary flex items-center gap-1">
                 {dict.viewAll} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -242,7 +243,7 @@ export default async function StorefrontHomepage(props: { params: Promise<{ subd
             <p className="text-slate-300 leading-relaxed text-sm">
               {organizer.aboutText || organizer.description || "Platform tiket event terpercaya."}
             </p>
-            <Link href="/about"
+            <Link href={getSiteUrl(subdomain, "/about")}
               className="inline-flex items-center gap-2 w-fit bg-white text-slate-900 font-black text-sm px-6 py-3 rounded-full hover:scale-105 transition-transform">
               Tentang Kami <ArrowRight className="h-4 w-4" />
             </Link>

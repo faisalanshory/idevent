@@ -58,5 +58,5 @@ export default async function MyTicketsPage({ params }: Props) {
     notifWaReminder: customer.notifWaReminder,
   };
 
-  return <CustomerDashboard customer={customerData} tickets={tickets} />;
+  return <CustomerDashboard customer={customerData} tickets={tickets} subdomain={subdomain} />;
 }

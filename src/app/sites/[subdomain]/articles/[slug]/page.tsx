@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getSiteUrl } from "@/lib/site-utils";
 import EventCard from "@/components/sites/event-card";
 import { Calendar, User, ArrowLeft, ChevronRight } from "lucide-react";
 
@@ -60,7 +61,7 @@ export default async function ArticleDetailPage({ params }: Props) {
         {/* Main content */}
         <div className="lg:col-span-2">
           {/* Back */}
-          <Link href="/articles" className="inline-flex items-center gap-1.5 text-sm font-bold text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+          <Link href={getSiteUrl(subdomain, "/articles")} className="inline-flex items-center gap-1.5 text-sm font-bold text-slate-500 hover:text-slate-700 mb-6 transition-colors">
             <ArrowLeft className="h-4 w-4" /> Semua Artikel
           </Link>
 
@@ -123,7 +124,7 @@ export default async function ArticleDetailPage({ params }: Props) {
               <h3 className="font-black text-slate-900 mb-4">Artikel Lainnya</h3>
               <div className="space-y-3">
                 {related.map(a => (
-                  <Link key={a.id} href={`/articles/${a.slug}`}>
+                  <Link key={a.id} href={getSiteUrl(subdomain, `/articles/${a.slug}`)}>
                     <div className="group flex gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors">
                       {a.coverImage && (
                         <img src={a.coverImage} alt={a.title}
@@ -141,7 +142,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                   </Link>
                 ))}
               </div>
-              <Link href="/articles" className="text-sm font-bold site-primary flex items-center gap-1 mt-4 hover:gap-2 transition-all">
+              <Link href={getSiteUrl(subdomain, "/articles")} className="text-sm font-bold site-primary flex items-center gap-1 mt-4 hover:gap-2 transition-all">
                 Lihat Semua Artikel <ChevronRight className="h-4 w-4" />
               </Link>
             </div>

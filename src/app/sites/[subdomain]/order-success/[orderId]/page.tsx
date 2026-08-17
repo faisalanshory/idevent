@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/lib/db";
+import { getSiteUrl } from "@/lib/site-utils";
 import { CheckCircle2, Ticket, Download, Calendar, MapPin, Clock } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -83,15 +84,15 @@ export default async function OrderSuccessPage({ params }: Props) {
 
       {/* Action buttons */}
       <div className="grid grid-cols-1 gap-3">
-        <Link href={`/ticket/${order.id}`}
+        <Link href={getSiteUrl(subdomain, `/ticket/${order.id}`)}
           className="flex items-center justify-center gap-2 site-bg-primary text-white py-4 rounded-xl font-black hover:opacity-90 transition">
           <Ticket className="h-5 w-5" /> Lihat Tiket Saya
         </Link>
-        <Link href="/my-tickets"
+        <Link href={getSiteUrl(subdomain, "/my-tickets")}
           className="flex items-center justify-center gap-2 border-2 site-border-primary site-primary py-3.5 rounded-xl font-black hover:bg-primary/5 transition text-sm">
           Semua Tiket Saya
         </Link>
-        <Link href="/"
+        <Link href={getSiteUrl(subdomain, "/")}
           className="text-center text-sm text-slate-500 hover:text-slate-700 py-2 transition">
           Kembali ke Beranda
         </Link>
