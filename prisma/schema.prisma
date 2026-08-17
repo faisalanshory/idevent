@@ -1,0 +1,388 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPERADMIN
+  ORGANIZER
+  CUSTOMER
+}
+
+enum OrganizerUserRole {
+  ADMIN
+  STAFF
+}
+
+enum OrganizerDomainType {
+  SUBDOMAIN
+  CUSTOM_DOMAIN
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  SOLD_OUT
+  COMPLETED
+  CANCELLED
+}
+
+enum TicketStatus {
+  AVAILABLE
+  SOLD_OUT
+  CLOSED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum TicketInstanceStatus {
+  VALID
+  USED
+  CANCELLED
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id             String           @id @default(uuid())
+  name           String?
+  email          String           @unique
+  password       String
+  role           Role             @default(CUSTOMER)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organizerUsers OrganizerUser[]
+}
+
+model Organizer {
+  id             String            @id @default(uuid())
+  name           String
+  slug           String            @unique
+  subdomain      String            @unique
+  logo           String?
+  favicon        String?
+  description    String?
+  aboutText      String?
+  heroImageUrl   String?
+  email          String?
+  phone          String?
+  website        String?
+  primaryColor   String            @default("#2563eb")
+  secondaryColor String            @default("#1e3a8a")
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  organizerUsers OrganizerUser[]
+  domains        OrganizerDomain[]
+  events         Event[]
+  customers      Customer[]
+  orders         Order[]
+  articles       Article[]
+  siteSetting    SiteSetting?
+  banners        Banner[]
+  promoCodes     PromoCode[]
+}
+
+model OrganizerUser {
+  id          String            @id @default(uuid())
+  userId      String
+  organizerId String
+  role        OrganizerUserRole @default(ADMIN)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizer Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizerId])
+}
+
+model OrganizerDomain {
+  id          String              @id @default(uuid())
+  organizerId String
+  domain      String              @unique
+  type        OrganizerDomainType @default(SUBDOMAIN)
+  verified    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  organizer Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id           String      @id @default(uuid())
+  organizerId  String
+  categoryId   String
+  title        String
+  slug         String
+  description  String
+  coverImage   String?
+  gallery      String?     // JSON string of image URLs
+  location     String
+  venue        String?
+  address      String?
+  mapsUrl      String?     // Google Maps URL
+  startDate    DateTime
+  endDate      DateTime
+  status       EventStatus @default(DRAFT)
+  isFeatured   Boolean     @default(false)
+  terms        String?
+  highlights   String?     // JSON array of highlight strings
+  rundown      String?     // JSON array of { time, title, description }
+  faq          String?     // JSON array of { question, answer }
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  organizer Organizer    @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  category  Category     @relation(fields: [categoryId], references: [id])
+  tickets   TicketType[]
+  orders    Order[]
+
+  @@unique([organizerId, slug])
+}
+
+model TicketType {
+  id           String       @id @default(uuid())
+  eventId      String
+  name         String
+  description  String?
+  price        Float
+  quantity     Int
+  saleStart    DateTime
+  saleEnd      DateTime
+  maxPurchase  Int          @default(5)
+  benefits     String?      // JSON array of benefit strings
+  status       TicketStatus @default(AVAILABLE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  tickets    Ticket[]
+}
+
+model Customer {
+  id                   String   @id @default(uuid())
+  organizerId          String
+  name                 String
+  email                String
+  phone                String?  // WhatsApp number
+  password             String?  // hashed, for demo login
+  avatarUrl            String?
+  // Notification preferences
+  notifEmailOrder      Boolean  @default(true)  // email on order
+  notifEmailReminder   Boolean  @default(true)  // email event reminder
+  notifWaOrder         Boolean  @default(false) // WA blast on order
+  notifWaReminder      Boolean  @default(false) // WA blast reminder
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  organizer Organizer       @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  orders    Order[]
+  tickets   Ticket[]
+  sessions  CustomerSession[]
+
+  @@unique([organizerId, email])
+}
+
+model CustomerSession {
+  id          String   @id @default(uuid())
+  customerId  String
+  token       String   @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model CustomerOtp {
+  id        String   @id @default(uuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id               String        @id
+  organizerId      String
+  customerId       String
+  eventId          String
+  totalAmount      Float
+  discountAmount   Float         @default(0)
+  promoCodeId      String?
+  paymentStatus    PaymentStatus @default(PENDING)
+  orderStatus      OrderStatus   @default(PENDING)
+  paymentProvider  String?
+  paymentReference String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  organizer  Organizer   @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  event      Event       @relation(fields: [eventId], references: [id])
+  orderItems OrderItem[]
+  payment    Payment?
+  promoCode  PromoCode?  @relation(fields: [promoCodeId], references: [id])
+}
+
+model OrderItem {
+  id           String   @id @default(uuid())
+  orderId      String
+  ticketTypeId String
+  quantity     Int
+  price        Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  ticketType TicketType @relation(fields: [ticketTypeId], references: [id])
+  tickets    Ticket[]
+}
+
+model Ticket {
+  id           String               @id @default(uuid())
+  orderItemId  String
+  ticketTypeId String
+  customerId   String
+  ticketCode   String               @unique
+  status       TicketInstanceStatus @default(VALID)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  orderItem  OrderItem  @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  ticketType TicketType @relation(fields: [ticketTypeId], references: [id])
+  customer   Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id                    String        @id @default(uuid())
+  orderId               String        @unique
+  provider              String        // MOCK | MIDTRANS | XENDIT
+  providerTransactionId String?
+  paymentMethod         String?       // qris, bca_va, gopay, etc.
+  amount                Float
+  status                PaymentStatus @default(PENDING)
+  paidAt                DateTime?
+  expiredAt             DateTime?
+  rawResponse           String?       // JSON string
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Article {
+  id          String        @id @default(uuid())
+  organizerId String
+  title       String
+  slug        String
+  excerpt     String?
+  coverImage  String?
+  gallery     String?
+  content     String
+  author      String?
+  category    String?
+  status      ArticleStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  organizer Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+
+  @@unique([organizerId, slug])
+}
+
+model Banner {
+  id          String    @id @default(uuid())
+  organizerId String
+  title       String
+  subtitle    String?
+  imageUrl    String
+  ctaLabel    String?
+  ctaUrl      String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  organizer Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+}
+
+model PromoCode {
+  id            String    @id @default(uuid())
+  organizerId   String
+  code          String
+  discountType  String    // PERCENTAGE | FIXED
+  discountValue Float
+  maxUses       Int?
+  usedCount     Int       @default(0)
+  validFrom     DateTime?
+  validUntil    DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  organizer Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  orders    Order[]
+
+  @@unique([organizerId, code])
+}
+
+model SiteSetting {
+  id              String   @id @default(uuid())
+  organizerId     String   @unique
+  title           String?
+  description     String?
+  primaryColor    String   @default("#2563eb")
+  secondaryColor  String   @default("#1e3a8a")
+  logoUrl         String?
+  faviconUrl      String?
+  socialInstagram String?
+  socialTiktok    String?
+  socialYoutube   String?
+  socialFacebook  String?
+  socialTwitter   String?
+  contactEmail    String?
+  contactPhone    String?
+  contactAddress  String?
+  faqGeneral      String?  // JSON array { question, answer }
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organizer Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+}
