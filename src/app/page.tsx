@@ -150,7 +150,9 @@ export default async function PlatformLandingPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.map((event) => {
-                const eventUrl = `http://${event.organizer.subdomain}.${rootDomain}/events/${event.slug}`;
+                const eventUrl = rootDomain.includes("vercel.app") 
+                  ? `/sites/${event.organizer.subdomain}/events/${event.slug}`
+                  : `http://${event.organizer.subdomain}.${rootDomain}/events/${event.slug}`;
                 
                 // Get lowest ticket price
                 const lowestPrice = event.tickets.length > 0
