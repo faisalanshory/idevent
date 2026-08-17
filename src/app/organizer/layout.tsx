@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getSession, getOrganizerAccess } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Calendar, FileText, Settings, LogOut, Home, Building, QrCode, Image } from "lucide-react";
+import { MobileNav } from "./mobile-nav";
 
 export default async function OrganizerLayout({
   children,
@@ -127,9 +128,21 @@ export default async function OrganizerLayout({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b border-border/60 bg-card/50 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-30">
-          <div className="flex items-center gap-2 md:hidden">
-            <Building className="h-5 w-5 text-primary" />
-            <span className="font-bold text-sm truncate max-w-[150px]">{organizer.name}</span>
+          <div className="flex items-center gap-2 md:hidden overflow-hidden">
+            {organizer.logo ? (
+              <img src={organizer.logo} alt={organizer.name} className="w-6 h-6 rounded-md object-cover shrink-0" />
+            ) : (
+              <Building className="h-5 w-5 text-primary shrink-0" />
+            )}
+            <span className="font-bold text-sm truncate">{organizer.name}</span>
+          </div>
+          <div className="md:hidden">
+            <MobileNav 
+              organizerName={organizer.name} 
+              organizerLogo={organizer.logo} 
+              organizerSubdomain={organizer.subdomain}
+              adminName={session.name}
+            />
           </div>
           <div className="hidden md:block text-sm text-muted-foreground font-medium">
             Organizer Console
