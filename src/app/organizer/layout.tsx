@@ -101,12 +101,20 @@ export default async function OrganizerLayout({
             Organizer Admin:
             <div className="text-foreground truncate text-sm mt-0.5">{session.name}</div>
           </div>
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="w-full justify-start text-muted-foreground hover:text-foreground">
-              <Home className="h-4 w-4 mr-2" />
-              Main Site
-            </Button>
-          </Link>
+          {(() => {
+            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+            const storefrontUrl = rootDomain.includes("vercel.app")
+              ? `/sites/${organizer.subdomain}`
+              : `http://${organizer.subdomain}.${rootDomain}`;
+            return (
+              <a href={storefrontUrl} target="_blank" rel="noopener noreferrer">
+                <Button variant="ghost" size="sm" className="w-full justify-start text-muted-foreground hover:text-foreground">
+                  <Home className="h-4 w-4 mr-2" />
+                  Visit Storefront
+                </Button>
+              </a>
+            );
+          })()}
           <form action="/api/auth/logout" method="POST" className="w-full">
             <Button variant="ghost" size="sm" type="submit" className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10">
               <LogOut className="h-4 w-4 mr-2" />

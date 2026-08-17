@@ -52,7 +52,9 @@ export default async function OrganizerOverview() {
   });
 
   const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-  const storefrontUrl = `http://${organizer.subdomain}.${rootDomain}`;
+  const storefrontUrl = rootDomain.includes("vercel.app")
+    ? `/sites/${organizer.subdomain}`
+    : `http://${organizer.subdomain}.${rootDomain}`;
 
   return (
     <div className="space-y-8">
