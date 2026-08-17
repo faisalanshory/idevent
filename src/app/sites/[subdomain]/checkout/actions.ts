@@ -146,8 +146,10 @@ export async function validatePromoCode({ code, organizerId, subtotal }: { code:
         organizerId,
         code: code.toUpperCase(),
         isActive: true,
-        OR: [{ validUntil: null }, { validUntil: { gte: new Date() } }],
-        OR: [{ validFrom: null }, { validFrom: { lte: new Date() } }],
+        AND: [
+          { OR: [{ validUntil: null }, { validUntil: { gte: new Date() } }] },
+          { OR: [{ validFrom: null }, { validFrom: { lte: new Date() } }] }
+        ],
       },
     });
     if (!promo) return { success: false, error: "Kode promo tidak ditemukan atau sudah tidak berlaku." };

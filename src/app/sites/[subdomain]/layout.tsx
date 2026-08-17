@@ -102,7 +102,7 @@ export default async function SubdomainLayout(props: {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2">
-              <LanguageSwitcher currentLang={lang} />
+              <LanguageSwitcher currentLang={lang as "en" | "id"} />
               
               <Link href="/search"
                 className="h-9 w-9 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
