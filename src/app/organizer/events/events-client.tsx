@@ -124,17 +124,17 @@ export function EventsClient({ initialEvents, categories }: EventsClientProps) {
             <table className="w-full text-left border-collapse text-sm">
               <thead>
                 <tr className="border-b border-border/60 bg-muted/40 text-muted-foreground font-semibold">
-                  <th className="p-4">Event Details</th>
-                  <th className="p-4">Venue & Location</th>
-                  <th className="p-4">Date & Time</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-right">Actions</th>
+                  <th className="p-4 whitespace-nowrap">Event Details</th>
+                  <th className="p-4 whitespace-nowrap">Venue & Location</th>
+                  <th className="p-4 whitespace-nowrap">Date & Time</th>
+                  <th className="p-4 whitespace-nowrap">Status</th>
+                  <th className="p-4 text-right whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
                 {filteredEvents.map((event) => (
                   <tr key={event.id} className="hover:bg-muted/10 transition-colors">
-                    <td className="p-4 font-semibold text-foreground">
+                    <td className="p-4 font-semibold text-foreground whitespace-nowrap min-w-[250px]">
                       <div className="flex items-center gap-3">
                         {event.coverImage ? (
                           <img src={event.coverImage} className="w-10 h-10 rounded-md object-cover" alt="" />
@@ -151,13 +151,13 @@ export function EventsClient({ initialEvents, categories }: EventsClientProps) {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <div>
                         <p className="font-medium">{event.venue || "Online"}</p>
                         <p className="text-xs text-muted-foreground">{event.location}</p>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <div className="text-xs space-y-0.5 text-muted-foreground">
                         <p className="font-semibold text-foreground">
                           Start: {new Date(event.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}
@@ -167,7 +167,7 @@ export function EventsClient({ initialEvents, categories }: EventsClientProps) {
                         </p>
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${
                         event.status === "PUBLISHED"
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400"
@@ -178,7 +178,7 @@ export function EventsClient({ initialEvents, categories }: EventsClientProps) {
                         {event.status}
                       </span>
                     </td>
-                    <td className="p-4 text-right space-x-2">
+                    <td className="p-4 text-right space-x-2 whitespace-nowrap">
                       <Button 
                         variant="ghost" 
                         size="icon" 

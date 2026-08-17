@@ -140,29 +140,29 @@ export default async function OrganizerOverview() {
             <table className="w-full text-left border-collapse text-sm">
               <thead>
                 <tr className="border-b border-border/60 bg-muted/40 text-muted-foreground font-semibold">
-                  <th className="p-4">Order ID</th>
-                  <th className="p-4">Customer</th>
-                  <th className="p-4">Event</th>
-                  <th className="p-4">Amount</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-right">Date</th>
+                  <th className="p-4 whitespace-nowrap">Order ID</th>
+                  <th className="p-4 whitespace-nowrap">Customer</th>
+                  <th className="p-4 whitespace-nowrap">Event</th>
+                  <th className="p-4 whitespace-nowrap">Amount</th>
+                  <th className="p-4 whitespace-nowrap">Status</th>
+                  <th className="p-4 text-right whitespace-nowrap">Date</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
                 {recentOrders.map((order) => (
                   <tr key={order.id} className="hover:bg-muted/10 transition-colors">
-                    <td className="p-4 font-mono font-semibold text-foreground">{order.id}</td>
-                    <td className="p-4">
+                    <td className="p-4 font-mono font-semibold text-foreground whitespace-nowrap">{order.id}</td>
+                    <td className="p-4 whitespace-nowrap min-w-[150px]">
                       <div>
                         <p className="font-medium">{order.customer.name}</p>
                         <p className="text-xs text-muted-foreground">{order.customer.email}</p>
                       </div>
                     </td>
                     <td className="p-4 max-w-[200px] truncate font-medium">{order.event.title}</td>
-                    <td className="p-4 font-bold">
+                    <td className="p-4 font-bold whitespace-nowrap">
                       Rp {order.totalAmount.toLocaleString("id-ID")}
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${
                         order.paymentStatus === "PAID"
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400"
@@ -173,7 +173,7 @@ export default async function OrganizerOverview() {
                         {order.paymentStatus}
                       </span>
                     </td>
-                    <td className="p-4 text-right text-muted-foreground">
+                    <td className="p-4 text-right text-muted-foreground whitespace-nowrap">
                       {new Date(order.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",

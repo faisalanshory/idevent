@@ -88,7 +88,7 @@ export function TicketSelector({ tickets }: TicketSelectorProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end gap-6 shrink-0">
+                <div className="flex flex-wrap items-center justify-between sm:justify-end gap-4 shrink-0 mt-2 sm:mt-0">
                   <div className="text-left sm:text-right">
                     <p className="text-xs text-muted-foreground font-semibold uppercase">Price</p>
                     <p className="text-base font-extrabold text-foreground">
@@ -97,11 +97,11 @@ export function TicketSelector({ tickets }: TicketSelectorProps) {
                   </div>
 
                   {isSoldOut ? (
-                    <span className="text-xs font-bold text-destructive px-3 py-2 bg-destructive/5 rounded-md border border-destructive/15">
+                    <span className="text-xs font-bold text-destructive px-3 py-2 bg-destructive/5 rounded-md border border-destructive/15 shrink-0">
                       Sold Out
                     </span>
                   ) : (
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0 justify-between sm:justify-end">
                       {/* Quantity selector */}
                       <div className="flex items-center border border-border rounded-lg bg-card/50">
                         <button
